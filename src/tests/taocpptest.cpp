@@ -16,17 +16,22 @@ public:
     void number(const std::int64_t) { stat_.numberCount++; }
     void number(const std::uint64_t) { stat_.numberCount++; }
     void number(const double) { stat_.numberCount++; }
+    void binary(tao::byte_view) {}
 
-    void string(const std::string & v) { stat_.stringCount++; stat_.stringLength += v.size(); }
+    void string(const tao::string_view v) { stat_.stringCount++; stat_.stringLength += v.size(); }
 
     void begin_array() {}
+    void begin_array(size_t) {}
     void element() { stat_.elementCount++; }
+    void end_array(size_t) { stat_.arrayCount++; }
     void end_array() { stat_.arrayCount++; }
 
     void begin_object() {}
-    void key(const std::string & v) { stat_.stringCount++; stat_.stringLength += v.size(); }
+    void begin_object(size_t) {}
+    void key(const tao::string_view v) { stat_.stringCount++; stat_.stringLength += v.size(); }
     void member() { stat_.memberCount++; }
     void end_object() { stat_.objectCount++; }
+    void end_object(size_t) { stat_.objectCount++; }
 
 private:
     StatHandler& operator=(const StatHandler&);
@@ -36,7 +41,7 @@ private:
 
 static void GenStat(Stat& stat, const tao::json::value& v){
    StatHandler statHandler(stat);
-   tao::json::sax::from_value(v, statHandler);
+   tao::json::events::from_value(statHandler, v);
 }
 
 class TAOCPPJSONParseResult : public ParseResultBase {
@@ -102,8 +107,8 @@ public:
     virtual StringResultBase* SaxRoundtrip(const char* json, size_t length) const {
         TAOCPPJSONStringResult* sr = new TAOCPPJSONStringResult;
         std::ostringstream oss;
-        tao::json::sax::to_stream handler( oss );
-        tao::json::sax::from_string(json, length, handler);
+        tao::json::events::to_stream handler( oss );
+        tao::json::events::from_string(handler, json, length);
         sr->s = oss.str();
         return sr;
     }
@@ -113,7 +118,7 @@ public:
     virtual bool SaxStatistics(const char* json, size_t length, Stat* stat) const {
         memset(stat, 0, sizeof(Stat));
         StatHandler handler(*stat);
-        tao::json::sax::from_string(json, length, handler);
+        tao::json::events::from_string(handler, json, length);
         return true;
     }
 #endif

@@ -81,7 +81,7 @@ public:
         NlohmannParseResult* pr = new NlohmannParseResult;
         try {
             tao::json::nlohmann::to_value<json> handler;
-            tao::json::sax::from_string(j, length, handler);
+            tao::json::events::from_string(handler, j, length);
             pr->root = std::move( handler.value );
         }
         catch (...) {
@@ -97,8 +97,8 @@ public:
         const NlohmannParseResult* pr = static_cast<const NlohmannParseResult*>(parseResult);
         NlohmannStringResult* sr = new NlohmannStringResult;
         std::ostringstream oss;
-        tao::json::sax::to_stream oss_handler(oss);
-        tao::json::nlohmann::from_value(pr->root, oss_handler);
+        tao::json::events::to_stream oss_handler(oss);
+        tao::json::nlohmann::from_value(oss_handler, pr->root);
         sr->s = oss.str();
         return sr;
     }
@@ -109,8 +109,8 @@ public:
         const NlohmannParseResult* pr = static_cast<const NlohmannParseResult*>(parseResult);
         NlohmannStringResult* sr = new NlohmannStringResult;
         std::ostringstream oss;
-        tao::json::sax::to_pretty_stream oss_handler(oss, 4);
-        tao::json::nlohmann::from_value(pr->root, oss_handler);
+        tao::json::events::to_pretty_stream oss_handler(oss, 4);
+        tao::json::nlohmann::from_value(oss_handler, pr->root);
         sr->s = oss.str();
         return sr;
     }
