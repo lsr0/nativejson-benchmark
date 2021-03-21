@@ -155,8 +155,12 @@ solution "benchmark"
 		links "jsonclibs"
 
                 configuration "gmake"
-                    filter { "files:not src/tests/jsonconstest.cpp" }
+                    if string.find(testfile, "jsonconstest") == nil then
                         buildoptions "-std=c++17"
+                    else
+                        buildoptions "-std=c++14"
+                    end
+
 
 solution "jsonstat"
     configurations { "release" }
@@ -245,7 +249,10 @@ solution "jsonstat"
 
       --linkoptions { "../../thirdparty/ULib/src/ulib/.libs/libulib.a" }
 
-			configuration "gmake"
-                            filter { "files:not src/tests/jsonconstest.cpp" }
+                        configuration "gmake"
+                            if string.find(testfile, "jsonconstest") == nil then
                                 buildoptions "-std=c++17"
+                            else
+                                buildoptions "-std=c++14"
+                            end
     end
