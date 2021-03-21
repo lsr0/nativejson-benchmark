@@ -246,5 +246,6 @@ solution "jsonstat"
       --linkoptions { "../../thirdparty/ULib/src/ulib/.libs/libulib.a" }
 
 			configuration "gmake"
-				buildoptions "-std=c++17"
+                            filter { "files:not src/tests/jsonconstest.cpp" }
+                                buildoptions "-std=c++17"
     end
