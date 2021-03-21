@@ -154,8 +154,9 @@ solution "benchmark"
 		-- linkLib("jsonclibs")
 		links "jsonclibs"
 
-		configuration "gmake"
-			buildoptions "-std=c++17"
+                configuration "gmake"
+                    filter { "files:not src/tests/jsonconstest.cpp" }
+                        buildoptions "-std=c++17"
 
 solution "jsonstat"
     configurations { "release" }
