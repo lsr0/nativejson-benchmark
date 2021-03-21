@@ -16,9 +16,9 @@ public:
     void number(const std::int64_t) { stat_.numberCount++; }
     void number(const std::uint64_t) { stat_.numberCount++; }
     void number(const double) { stat_.numberCount++; }
-    void binary(tao::byte_view) {}
+    void binary(tao::binary_view) {}
 
-    void string(const tao::string_view v) { stat_.stringCount++; stat_.stringLength += v.size(); }
+    void string(const std::string_view v) { stat_.stringCount++; stat_.stringLength += v.size(); }
 
     void begin_array() {}
     void begin_array(size_t) {}
@@ -28,7 +28,7 @@ public:
 
     void begin_object() {}
     void begin_object(size_t) {}
-    void key(const tao::string_view v) { stat_.stringCount++; stat_.stringLength += v.size(); }
+    void key(const std::string_view v) { stat_.stringCount++; stat_.stringLength += v.size(); }
     void member() { stat_.memberCount++; }
     void end_object() { stat_.objectCount++; }
     void end_object(size_t) { stat_.objectCount++; }
